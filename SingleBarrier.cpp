@@ -30,7 +30,7 @@ void test(int id, SingleBarrier& sb) {
 int main() {
     SingleBarrier sb(3);
 
-    jthread t0{test, 0, ref(sb)};
+    jthread t0 = jthread(test, 0, ref(sb));
     jthread t1{test, 1, ref(sb)};
     jthread t2{test, 2, ref(sb)};
 

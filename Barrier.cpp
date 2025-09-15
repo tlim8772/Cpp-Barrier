@@ -38,29 +38,27 @@ struct Barrier {
     }
 };
 
-void check(vector<int>& arr) {
-    printf("%d %d\n", arr[0], arr[1]);
-}
+int N = 5;
+vector<int> test(N, 0);
+Barrier bar(N);
 
-void test(int id, vector<int>& arr, Barrier& b) {
-    for (int i = 0; i < 5; i++) {
-        //this_thread::sleep_for(chrono::milliseconds(100 * id));
-        b.arrive_and_wait();
-        printf("T%d leaves\n", id);
+void f(int tid) {
+    for (int r = 0; r < 1000000; r++) {
+        test[(tid + r) % N]++;
+        bar.arrive_and_wait();
     }
-   
 }
-
-
 
 int main() {
-    int len = 4;
-    Barrier b(len);
-    vector<int> arr(len, 0);
+    {
+        vector<jthread> ths;
+        for (int i = 0; i < N; i++) {
+            ths.push_back(std::move(jthread(f, i)));
+        }
+    }
 
-    jthread t0{test, 0, ref(arr), ref(b)};
-    jthread t1{test, 1, ref(arr), ref(b)};
-    jthread t2{test, 2, ref(arr), ref(b)};
-    jthread t3{test, 3, ref(arr), ref(b)};
+    for (int n : test) cout << n << " ";
+    cout << endl;
+
 
 }

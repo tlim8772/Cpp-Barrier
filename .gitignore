@@ -1,3 +1,5 @@
 .vscode/
 a.out
 out
+with-locks
+no-locks
