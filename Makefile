@@ -1,6 +1,6 @@
 CXX = g++
 STD = -std=c++23
-TEST = -g
+TEST = -g -fsanitize=thread
 
 with-locks:
 	$(CXX) $(STD) $(TEST) -o with-locks Barrier.cpp
@@ -10,3 +10,6 @@ no-locks:
 
 clean:
 	rm with-locks no-locks
+
+disable-aslr:
+	echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
